@@ -30,7 +30,7 @@ export default function ModulesScreen() {
           <Card style={{ padding: spacing(2), alignItems: 'center' }}>
             <Text style={{ color: colors.textDim }}>No modules yet.</Text>
             <Link href="/add" asChild>
-              <Button title="Add your first module" onPress={() => {}} style={{ marginTop: spacing(1) }} />
+              <Button title="Add your first module" style={{ marginTop: spacing(1) }} />
             </Link>
           </Card>
         }
@@ -44,9 +44,7 @@ export default function ModulesScreen() {
                     <Chip>{item.credits} ECTS</Chip>
                     {item.semester ? <Chip>{item.semester}</Chip> : null}
                   </View>
-                  <Text style={styles.weights}>
-                    Proj {defaultWeighting.project}% • Assess {defaultWeighting.assessment}% • Attend {defaultWeighting.attendance}% • Exam {defaultWeighting.exam}%
-                  </Text>
+                  {/* weightings preview removed */}
                 </View>
               </Card>
             </Pressable>
@@ -56,7 +54,7 @@ export default function ModulesScreen() {
       />
 
       <Link href="/add" asChild>
-        <Button title="Add Module" onPress={() => {}} style={{ marginTop: spacing(1.5) }} />
+        <Button title="Add Module" style={{ marginTop: spacing(1.5) }} />
       </Link>
     </View>
   );

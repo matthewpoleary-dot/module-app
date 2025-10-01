@@ -15,7 +15,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Modules', tabBarIcon: ({ color, size }) => <Ionicons name="grid" color={color} size={size} /> }} />
-      <Tabs.Screen name="add" options={{ title: 'Add', tabBarIcon: ({ color, size }) => <Ionicons name="add-circle" color={color} size={size} /> }} />
+      {/* Remove Add tab; route still accessible via /add */}
       <Tabs.Screen name="calendar" options={{ title: 'Calendar', tabBarIcon: ({ color, size }) => <Ionicons name="calendar" color={color} size={size} /> }} />
       <Tabs.Screen name="deadlines" options={{ title: 'Deadlines', tabBarIcon: ({ color, size }) => <Ionicons name="alarm" color={color} size={size} /> }} />
       <Tabs.Screen name="stats" options={{ title: 'Stats', tabBarIcon: ({ color, size }) => <Ionicons name="stats-chart" color={color} size={size} /> }} />

@@ -1,33 +1,19 @@
 // app/(tabs)/weightings.tsx
 import { FlatList, Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Chip } from '../../components/ui/Chip';
-import { Input } from '../../components/ui/Input';
 import { colors, spacing } from '../../constants/theme';
 import { useModules } from '../../context/ModulesContext';
 
 export default function Weightings() {
-  const { modules, defaultWeighting, setDefaultWeighting } = useModules();
-  const set = (k: keyof typeof defaultWeighting, v: string) => setDefaultWeighting({ ...defaultWeighting, [k]: Number(v) || 0 });
-  const total = defaultWeighting.project + defaultWeighting.assessment + defaultWeighting.attendance + defaultWeighting.exam;
+  const { modules } = useModules();
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <Text style={styles.title}>Module Weightings</Text>
 
-        <Card style={{ padding: spacing(2), gap: spacing(1) }}>
-          <Text style={styles.section}>Default template (applies to all)</Text>
-          <View style={styles.grid}>
-            <Input label="Project %" keyboardType="numeric" value={String(defaultWeighting.project)} onChangeText={(t)=>set('project',t)} returnKeyType="done" blurOnSubmit onSubmitEditing={Keyboard.dismiss}/>
-            <Input label="Assess. %" keyboardType="numeric" value={String(defaultWeighting.assessment)} onChangeText={(t)=>set('assessment',t)} returnKeyType="done" blurOnSubmit onSubmitEditing={Keyboard.dismiss}/>
-            <Input label="Attend. %" keyboardType="numeric" value={String(defaultWeighting.attendance)} onChangeText={(t)=>set('attendance',t)} returnKeyType="done" blurOnSubmit onSubmitEditing={Keyboard.dismiss}/>
-            <Input label="Exam %" keyboardType="numeric" value={String(defaultWeighting.exam)} onChangeText={(t)=>set('exam',t)} returnKeyType="done" blurOnSubmit onSubmitEditing={Keyboard.dismiss}/>
-          </View>
-          <Text style={[styles.total, { color: total === 100 ? colors.text : '#F59E0B' }]}>Total: {total}%</Text>
-          <Button title="Save" onPress={Keyboard.dismiss} />
-        </Card>
+        {/* Default template removed per request */}
 
         <Text style={[styles.section, { marginTop: spacing(2) }]}>Preview</Text>
         <FlatList
@@ -44,10 +30,7 @@ export default function Weightings() {
               <View style={styles.center}>
                 <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                 <View style={styles.grid2}>
-                  <W label="Project" v={defaultWeighting.project} />
-                  <W label="Assess." v={defaultWeighting.assessment} />
-                  <W label="Attend." v={defaultWeighting.attendance} />
-                  <W label="Exam" v={defaultWeighting.exam} />
+                  <Text style={{ color: colors.textDim }}>Weightings per module coming soon</Text>
                 </View>
               </View>
             </Card>
