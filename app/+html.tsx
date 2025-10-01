@@ -6,6 +6,8 @@ export default function Document({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         {/* Basic */}
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="title" content="My App" />
         <meta name="description" content="Your short description." />
 
@@ -23,8 +25,9 @@ export default function Document({ children }: { children: React.ReactNode }) {
 
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />
-        {/* Home screen / PWA icons */}
-        <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon.png" />
+      {/* Home screen / PWA icons */}
+      <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon.png" />
+      <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/assets/icon.png" />
         <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/assets/icon.png" />
 
