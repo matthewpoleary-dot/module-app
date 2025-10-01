@@ -1,33 +1,21 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useAppTheme } from "./useAppTheme";
+import { Link } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function About() {
-  const { theme } = useAppTheme();
-  const isDark = theme === "dark";
-
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? "#000" : "#fff" }]}>
-      <Text style={[styles.headline, { color: isDark ? "#fff" : "#111" }]}>
+    <View style={[styles.container, { backgroundColor: "#fff" }]}>
+      <Text style={[styles.headline, { color: "#111" }] }>
         About This App
       </Text>
-      <Text style={{ color: isDark ? "#ddd" : "#333", textAlign: "center", marginTop: 8 }}>
+      <Text style={{ color: "#333", textAlign: "center", marginTop: 8 }}>
         Built with Expo + Expo Router. This screen is just a simple example of
         static content. You can link out or add more sections here.
       </Text>
-
-      <Pressable
-        onPress={() => {
-          import("react-native").then(({ Linking }) => {
-            Linking.openURL("https://expo.dev");
-          });
-        }}
-        style={({ pressed }) => [
-          styles.button,
-          { opacity: pressed ? 0.8 : 1, backgroundColor: isDark ? "#1e1e1e" : "#111" },
-        ]}
-      >
-        <Text style={{ color: "#fff", fontWeight: "600" }}>Learn more at expo.dev</Text>
-      </Pressable>
+      <View style={styles.button}>
+        <Link href="https://expo.dev" target="_blank" style={{ color: "#111", fontWeight: "600" }}>
+          Learn more at expo.dev
+        </Link>
+      </View>
     </View>
   );
 }
@@ -35,5 +23,5 @@ export default function About() {
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
   headline: { fontSize: 26, fontWeight: "800" },
-  button: { marginTop: 20, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 10 },
+  button: { marginTop: 20, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 10, backgroundColor: "#f2f2f2" },
 });
