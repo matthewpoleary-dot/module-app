@@ -8,14 +8,16 @@ type Props = {
   onPress: () => void;
   style?: ViewStyle;
   variant?: 'primary' | 'ghost';
+  disabled?: boolean;
 };
 
-export function Button({ title, onPress, style, variant = 'primary' }: Props) {
+export function Button({ title, onPress, style, variant = 'primary', disabled = false }: Props) {
   if (variant === 'ghost') {
     return (
       <Pressable
-        onPress={() => { Haptics.selectionAsync(); onPress(); }}
-        style={[styles.ghost, style]}
+        disabled={disabled}
+        onPress={() => { if (disabled) return; Haptics.selectionAsync(); onPress(); }}
+        style={[styles.ghost, disabled ? { opacity: 0.6 } : null, style]}
       >
         <Text style={styles.ghostText}>{title}</Text>
       </Pressable>
@@ -23,8 +25,9 @@ export function Button({ title, onPress, style, variant = 'primary' }: Props) {
   }
   return (
     <Pressable
-      onPress={() => { Haptics.selectionAsync(); onPress(); }}
-      style={[{ borderRadius: radius.xl, overflow: 'hidden' }, style]}
+      disabled={disabled}
+      onPress={() => { if (disabled) return; Haptics.selectionAsync(); onPress(); }}
+      style={[{ borderRadius: radius.xl, overflow: 'hidden', opacity: disabled ? 0.6 : 1 }, style]}
     >
       <LinearGradient
         colors={[colors.accent, colors.accent2]}
