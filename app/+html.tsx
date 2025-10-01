@@ -8,6 +8,7 @@ export default function Document({ children }: { children: React.ReactNode }) {
         {/* Basic */}
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#E6F4FE" />
         <meta name="title" content="My App" />
         <meta name="description" content="Your short description." />
 
@@ -24,8 +25,7 @@ export default function Document({ children }: { children: React.ReactNode }) {
         <meta name="twitter:image" content="/og.png" />
 
         {/* Favicon */}
-        {/* Use PNG so Vercel doesn't fall back to default favicon */}
-        <link rel="icon" type="image/png" href="/assets/icon.png" />
+        <link rel="icon" type="image/png" sizes="any" href="/assets/icon.png?v=1.0.5" />
       {/* Home screen / PWA icons */}
       <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon.png" />
       <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/assets/icon.png" />
