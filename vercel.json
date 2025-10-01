@@ -1,14 +1,13 @@
 {
+    "buildCommand": "npm ci && npm run build",
+    "outputDirectory": "dist",
     "cleanUrls": true,
     "rewrites": [
       {
-        "source": "/(manifest\\.json|manifest\\.webmanifest|favicon\\.ico|favicon\\.png|apple-touch-icon\\.png|icons/.*|assets/.*|_expo/.*)",
+        "source": "/(manifest\\.json|manifest\\.webmanifest|favicon\\.(?:ico|png)|apple-touch-icon\\.png|icons/.*|_expo/.*|assets/.*)",
         "destination": "/$1"
       },
-      {
-        "source": "/(.*)",
-        "destination": "/index.html"
-      }
+      { "source": "/(.*)", "destination": "/index.html" }
     ],
     "headers": [
       {
