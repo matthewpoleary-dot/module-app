@@ -10,8 +10,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "reset-project": "node ./scripts/reset-project.js",
-
     "build": "expo export --platform web",
+    "postbuild": "node ./scripts/copy-icons.js",
     "preview": "npx serve dist"
   },
   "dependencies": {
