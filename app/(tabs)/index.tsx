@@ -1,7 +1,7 @@
 // app/(tabs)/index.tsx
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, Text, View } from "react-native";
-import { ModuleItem, useModulesStore } from "../../lib/modulestore"; // ✅ correct
+import { useModulesStore, type ModuleItem } from "../../lib/modulestore";
 
 export default function HomeScreen() {
   const router = useRouter();

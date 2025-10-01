@@ -1,7 +1,5 @@
-// lib/modulesStore.ts
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// lib/modulestore.ts
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
 
 export type Weightings = {
   exam: number;
@@ -26,30 +24,15 @@ type ModulesState = {
   clear: () => void;
 };
 
-export const useModulesStore = create<ModulesState>()(
-  persist(
-    (set, get) => ({
-      modules: [],
-      addModule: (m) =>
-        set({
-          modules: [
-            ...get().modules,
-            {
-              ...m,
-              id: Math.random().toString(36).slice(2),
-              createdAt: Date.now(),
-            },
-          ],
-        }),
-      removeModule: (id) =>
-        set({ modules: get().modules.filter((x) => x.id !== id) }),
-      clear: () => set({ modules: [] }),
+export const useModulesStore = create<ModulesState>((set, get) => ({
+  modules: [],
+  addModule: (m) =>
+    set({
+      modules: [
+        ...get().modules,
+        { ...m, id: Math.random().toString(36).slice(2), createdAt: Date.now() },
+      ],
     }),
-    {
-      name: "modules-store-v1",
-      storage: createJSONStorage(() => AsyncStorage),
-      version: 1,
-      migrate: (state) => state, // simple
-    }
-  )
-);
+  removeModule: (id) => set({ modules: get().modules.filter((x) => x.id !== id) }),
+  clear: () => set({ modules: [] }),
+}));
