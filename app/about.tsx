@@ -1,4 +1,4 @@
-import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useAppTheme } from "./useAppTheme";
 
 export default function About() {
@@ -16,7 +16,11 @@ export default function About() {
       </Text>
 
       <Pressable
-        onPress={() => Linking.openURL("https://expo.dev")}
+        onPress={() => {
+          import("react-native").then(({ Linking }) => {
+            Linking.openURL("https://expo.dev");
+          });
+        }}
         style={({ pressed }) => [
           styles.button,
           { opacity: pressed ? 0.8 : 1, backgroundColor: isDark ? "#1e1e1e" : "#111" },
