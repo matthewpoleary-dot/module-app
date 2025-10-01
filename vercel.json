@@ -2,18 +2,9 @@
     "buildCommand": "npm ci && npm run build",
     "outputDirectory": "dist",
     "cleanUrls": true,
-    "rewrites": [
-      {
-        "source": "/(manifest\\.json|manifest\\.webmanifest|favicon\\.(?:ico|png)|apple-touch-icon\\.png|icons/.*|_expo/.*|assets/.*)",
-        "destination": "/$1"
-      },
-      { "source": "/(.*)", "destination": "/index.html" }
-    ],
-    "headers": [
-      {
-        "source": "/(manifest\\.json|manifest\\.webmanifest)",
-        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
-      }
+    "routes": [
+      { "handle": "filesystem" },
+      { "src": "/.*", "dest": "/index.html" }
     ]
   }
   
