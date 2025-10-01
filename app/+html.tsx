@@ -1,11 +1,10 @@
 // app/+html.tsx
-import Head from 'expo-router/head';
 import { ScrollViewStyleReset } from 'expo-router/html';
 
 export default function Document({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <Head>
+      <head>
         {/* Basic */}
         <meta name="title" content="My App" />
         <meta name="description" content="Your short description." />
@@ -30,7 +29,7 @@ export default function Document({ children }: { children: React.ReactNode }) {
         <link rel="icon" type="image/png" sizes="512x512" href="/assets/icon.png" />
 
         <ScrollViewStyleReset />
-      </Head>
+      </head>
       <body>
         {children}
       </body>
