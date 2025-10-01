@@ -24,7 +24,8 @@ export default function Document({ children }: { children: React.ReactNode }) {
         <meta name="twitter:image" content="/og.png" />
 
         {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" />
+        {/* Use PNG so Vercel doesn't fall back to default favicon */}
+        <link rel="icon" type="image/png" href="/assets/icon.png" />
       {/* Home screen / PWA icons */}
       <link rel="apple-touch-icon" sizes="180x180" href="/assets/icon.png" />
       <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/assets/icon.png" />
