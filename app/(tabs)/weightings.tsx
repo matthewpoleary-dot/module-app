@@ -1,3 +1,4 @@
+// app/(tabs)/weightings.tsx
 import { useMemo, useState } from "react";
 import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import { Button } from "../../components/ui/Button";
@@ -81,11 +82,15 @@ export default function WeightingsScreen() {
                 onChangeText={(t: string) => setField(item.id, "attendance", t)}
               />
 
-              <Text style={styles.sum}>Total: {sum}% {sum !== 100 ? "⚠️ must be 100%" : "✅"}</Text>
+              <Text style={styles.sum}>
+                Total: {sum}% {sum !== 100 ? "⚠️ must be 100%" : "✅"}
+              </Text>
 
               <Button
                 title={dirty ? "Save changes" : "Save"}
-                onPress={() => { if (sum === 100) save(item.id); }}
+                onPress={() => {
+                  if (sum === 100) save(item.id);
+                }}
                 style={{ opacity: sum !== 100 ? 0.6 : 1 }}
               />
             </Card>
