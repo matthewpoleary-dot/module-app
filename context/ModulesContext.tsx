@@ -1,37 +1,35 @@
 // context/ModulesContext.tsx
-import { nanoid } from "nanoid/non-secure"; // if missing, replace nanoid() with uid()
 import React, { createContext, useContext, useMemo, useState } from "react";
 
-export type Weightings = { exam: number; project: number; assessments: number; attendance: number };
+type Weightings = { exam: number; project: number; assessments: number; attendance: number };
 
 export type Module = {
   id: string;
   name: string;
-  credits: number;       // ECTS
+  credits: number;           // ECTS
   grade: number | null;
-  semester: string | null; // "Sem 1", "Sem 2", etc (optional)
-  weightings: Weightings;  // stored per module
+  semester: string | null;
+  weightings: Weightings;    // stored per module
 };
 
 export type Meeting = {
   id: string;
   moduleId: string;
-  kind: string;   // "Lecture" | "Tutorial" | ...
-  day: number;    // 0..6 (Sun..Sat)
-  start: string;  // "09:00"
-  end: string;    // "10:00"
+  kind: string;              // "Lecture" | "Tutorial" | ...
+  day: number;               // 0..6 (Sun..Sat)
+  start: string;             // "09:00"
+  end: string;               // "10:00"
   location: string | null;
 };
 
 export type DeadlineStatus = "todo" | "in_progress" | "done";
-
 export type Deadline = {
   id: string;
   moduleId: string;
   title: string;
-  dueISO: string;         // ISO datetime
+  dueISO: string;            // ISO datetime
   details: string | null;
-  status: DeadlineStatus; // ✅ status for filtering and UI
+  status: DeadlineStatus;
 };
 
 type Totals = { ects: number; weightedAvg: number | null };
@@ -42,11 +40,9 @@ type Ctx = {
   deadlines: Deadline[];
   totals: Totals;
 
-  // config used by Calendar expansion
   semesterStartISO: string;
   setSemesterStartISO: (iso: string) => void;
 
-  // defaults
   defaultWeighting: Weightings;
 
   // modules
@@ -61,15 +57,15 @@ type Ctx = {
   removeMeeting: (id: string) => void;
 
   // deadlines
-  addDeadline: (d: Omit<Deadline, "id" | "status">) => string; // status defaulted to "todo"
+  addDeadline: (d: Omit<Deadline, "id" | "status">) => string;
   removeDeadline: (id: string) => void;
   setDeadlineStatus: (id: string, s: DeadlineStatus) => void;
 };
 
 const ModulesContext = createContext<Ctx | null>(null);
 
-// helper if you don't want nanoid:
-// const uid = () => Math.random().toString(36).slice(2);
+// small, dependency-free id
+const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
 
 export function ModulesProvider({ children }: { children: React.ReactNode }) {
   const [modules, setModules] = useState<Module[]>([]);
@@ -81,7 +77,7 @@ export function ModulesProvider({ children }: { children: React.ReactNode }) {
 
   // modules
   const addModule: Ctx["addModule"] = ({ name, credits, semester, weightings }) => {
-    const id = nanoid(); // or uid()
+    const id = uid();
     setModules((arr) => [...arr, { id, name, credits, grade: null, semester, weightings: { ...weightings } }]);
     return id;
   };
@@ -116,26 +112,23 @@ export function ModulesProvider({ children }: { children: React.ReactNode }) {
 
   // meetings
   const addMeeting: Ctx["addMeeting"] = (m) => {
-    const id = nanoid(); // or uid()
+    const id = uid();
     setMeetings((arr) => [...arr, { id, ...m }]);
     return id;
   };
-
   const removeMeeting: Ctx["removeMeeting"] = (id) => {
     setMeetings((arr) => arr.filter((m) => m.id !== id));
   };
 
   // deadlines
   const addDeadline: Ctx["addDeadline"] = (d) => {
-    const id = nanoid(); // or uid()
+    const id = uid();
     setDeadlines((arr) => [...arr, { id, status: "todo", ...d }]);
     return id;
   };
-
   const removeDeadline: Ctx["removeDeadline"] = (id) => {
     setDeadlines((arr) => arr.filter((d) => d.id !== id));
   };
-
   const setDeadlineStatus: Ctx["setDeadlineStatus"] = (id, s) => {
     setDeadlines((arr) => arr.map((d) => (d.id === id ? { ...d, status: s } : d)));
   };

@@ -1,130 +1,74 @@
 // app/module/new.tsx
 import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
-import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
-import { useModulesStore } from "../../lib/modulestore"; // ✅ correct
+import { useState } from "react";
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
+import { Button } from "../../components/ui/Button";
+import { Card } from "../../components/ui/Card";
+import { Input } from "../../components/ui/Input";
+import { colors, spacing } from "../../constants/theme";
+import { useModules } from "../../context/ModulesContext";
 
-export default function NewModuleScreen() {
+export default function AddModuleScreen() {
   const router = useRouter();
-  const addModule = useModulesStore((s) => s.addModule);
+  const { addModule, defaultWeighting } = useModules();
 
   const [name, setName] = useState("");
-  const [code, setCode] = useState("");
-  const [ectsStr, setEctsStr] = useState("");
+  const [credits, setCredits] = useState("");
+  const [semester, setSemester] = useState<string | null>(null);
+  const [weights, setWeights] = useState({ ...defaultWeighting });
 
-  const [exam, setExam] = useState("70");
-  const [project, setProject] = useState("30");
-  const [assessments, setAssessments] = useState("0");
-  const [attendance, setAttendance] = useState("0");
+  const sum = weights.exam + weights.project + weights.assessments + weights.attendance;
+  const canSave = name.trim().length > 0 && Number(credits) > 0 && sum === 100;
 
-  const total = useMemo(() => {
-    const n = (v: string) => Number(v || 0);
-    return n(exam) + n(project) + n(assessments) + n(attendance);
-  }, [exam, project, assessments, attendance]);
-
-  const onSave = () => {
-    const ects = Number(ectsStr);
-    if (!name.trim()) return Alert.alert("Missing name", "Please enter a module name.");
-    if (!Number.isFinite(ects) || ects <= 0) return Alert.alert("ECTS", "Enter a valid ECTS value.");
-    if (total !== 100) return Alert.alert("Weightings must total 100%", `Current total is ${total}%.`);
+  const save = () => {
+    const ects = Number(credits);
+    if (!name.trim()) return Alert.alert("Name required");
+    if (!Number.isFinite(ects) || ects <= 0) return Alert.alert("Enter valid ECTS");
+    if (sum !== 100) return Alert.alert("Weights must sum to 100%");
 
     addModule({
       name: name.trim(),
-      code: code.trim() || undefined,
-      ects,
-      weightings: {
-        exam: Number(exam),
-        project: Number(project),
-        assessments: Number(assessments),
-        attendance: Number(attendance),
-      },
+      credits: ects,
+      semester: semester && semester.trim() ? semester.trim() : null,
+      weightings: { ...weights },
     });
 
-    router.replace("/"); // back to Home
+    // go back to the Tabs Home (ensures you land on /(tabs)/index)
+    router.replace("/(tabs)");
   };
 
+  const set = (k: keyof typeof weights, v: string) =>
+    setWeights((w) => ({ ...w, [k]: Number(v) || 0 }));
+
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: "#0B0B0F" }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
-        <Text style={{ color: "white", fontSize: 22, fontWeight: "900", marginBottom: 12 }}>
-          New module
-        </Text>
+    <KeyboardAvoidingView behavior={Platform.select({ ios: "padding" })} style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Text style={styles.h1}>Add module</Text>
 
-        <Field label="Name" value={name} onChangeText={setName} placeholder="e.g. Microeconomics" />
-        <Field label="Code (optional)" value={code} onChangeText={setCode} placeholder="e.g. ECON10020" />
-        <Field label="ECTS" value={ectsStr} onChangeText={setEctsStr} keyboardType="numeric" placeholder="e.g. 10" />
+        <Card style={{ padding: spacing(2), gap: spacing(1) }}>
+          <Input label="Name" value={name} onChangeText={setName} />
+          <Input label="ECTS" value={credits} onChangeText={setCredits} keyboardType="numeric" />
+          <Input label="Semester (optional)" value={semester ?? ""} onChangeText={setSemester} />
+        </Card>
 
-        <Text style={{ color: "#C7C7D0", marginTop: 18, marginBottom: 6, fontWeight: "700" }}>
-          Weightings (must sum to 100%)
-        </Text>
-        <Field label="Exam %" value={exam} onChangeText={setExam} keyboardType="numeric" />
-        <Field label="Project %" value={project} onChangeText={setProject} keyboardType="numeric" />
-        <Field label="Assessments %" value={assessments} onChangeText={setAssessments} keyboardType="numeric" />
-        <Field label="Attendance %" value={attendance} onChangeText={setAttendance} keyboardType="numeric" />
+        <Text style={[styles.h2, { marginTop: spacing(2) }]}>Weightings</Text>
+        <Card style={{ padding: spacing(2), gap: spacing(1) }}>
+          <Input label="Exam %" keyboardType="numeric" value={String(weights.exam)} onChangeText={(t) => set("exam", t)} />
+          <Input label="Project %" keyboardType="numeric" value={String(weights.project)} onChangeText={(t) => set("project", t)} />
+          <Input label="Assessments %" keyboardType="numeric" value={String(weights.assessments)} onChangeText={(t) => set("assessments", t)} />
+          <Input label="Attendance %" keyboardType="numeric" value={String(weights.attendance)} onChangeText={(t) => set("attendance", t)} />
+          <Text style={styles.sum}>Total: {sum}% {sum !== 100 ? "⚠️ (must be 100%)" : "✅"}</Text>
+        </Card>
 
-        <Text style={{ color: total === 100 ? "#22C55E" : "#F59E0B", marginTop: 4 }}>
-          Total: {total}%
-        </Text>
-
-        <Pressable
-          onPress={onSave}
-          style={{
-            marginTop: 20,
-            borderRadius: 12,
-            paddingVertical: 16,
-            alignItems: "center",
-            backgroundColor: "#2563EB",
-            opacity: name.trim() && ectsStr ? 1 : 0.8,
-          }}
-          accessibilityRole="button"
-          accessibilityLabel="Save module"
-        >
-          <Text style={{ color: "white", fontWeight: "900" }}>Save</Text>
-        </Pressable>
-      </ScrollView>
+        <Button title="Save module" onPress={save} style={{ marginTop: spacing(2) }} disabled={!canSave} />
+      </View>
     </KeyboardAvoidingView>
   );
 }
 
-function Field(props: {
-  label: string;
-  value: string;
-  onChangeText: (t: string) => void;
-  placeholder?: string;
-  keyboardType?: "default" | "numeric";
-}) {
-  return (
-    <View style={{ marginBottom: 12 }}>
-      <Text style={{ color: "#9CA3AF", marginBottom: 6 }}>{props.label}</Text>
-      <TextInput
-        value={props.value}
-        onChangeText={props.onChangeText}
-        placeholder={props.placeholder}
-        keyboardType={props.keyboardType ?? "default"}
-        placeholderTextColor="#6B7280"
-        returnKeyType="done"
-        style={{
-          backgroundColor: "#12121A",
-          color: "white",
-          borderRadius: 12,
-          paddingHorizontal: 14,
-          paddingVertical: 12,
-          borderWidth: 1,
-          borderColor: "#1F2937",
-        }}
-      />
-    </View>
-  );
-}
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.bg, padding: spacing(2), gap: spacing(1) },
+  h1: { color: colors.text, fontSize: 22, fontWeight: "900" },
+  h2: { color: colors.textDim, fontWeight: "800" },
+  sum: { marginTop: spacing(0.5), color: colors.textDim, fontWeight: "700" },
+});
