@@ -1,11 +1,11 @@
 // app/(tabs)/index.tsx
 import { useRouter } from "expo-router";
 import { FlatList, Pressable, Text, View } from "react-native";
-import { useModulesStore, type ModuleItem } from "../../lib/modulestore";
+import { useModules, type Module } from "../../context/ModulesContext";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const modules = useModulesStore((s) => s.modules);
+  const { modules } = useModules();
   const goToNew = () => router.push("/module/new");
 
   return (
@@ -80,7 +80,7 @@ export default function HomeScreen() {
   );
 }
 
-function ModuleCard({ item }: { item: ModuleItem }) {
+function ModuleCard({ item }: { item: Module }) {
   return (
     <View
       style={{
@@ -93,11 +93,10 @@ function ModuleCard({ item }: { item: ModuleItem }) {
       }}
     >
       <Text style={{ color: "white", fontWeight: "800", fontSize: 16 }}>{item.name}</Text>
-      {!!item.code && <Text style={{ color: "#9CA3AF", marginTop: 2 }}>{item.code}</Text>}
-      <Text style={{ color: "#9CA3AF", marginTop: 6 }}>ECTS: {item.ects}</Text>
+      {!!item.semester && <Text style={{ color: "#9CA3AF", marginTop: 2 }}>{item.semester}</Text>}
+      <Text style={{ color: "#9CA3AF", marginTop: 6 }}>ECTS: {item.credits}</Text>
       <Text style={{ color: "#9CA3AF", marginTop: 2 }}>
-        Wgt — Exam {item.weightings.exam}% · Project {item.weightings.project}% ·
-        Assess {item.weightings.assessments}% · Attend {item.weightings.attendance}%
+        Wgt — Exam {item.weightings.exam}% · Project {item.weightings.project}% · Assess {item.weightings.assessments}% · Attend {item.weightings.attendance}%
       </Text>
     </View>
   );
